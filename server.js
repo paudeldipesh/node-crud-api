@@ -12,13 +12,16 @@ app.get("/contact", (req, res) => {
   res.send("Hello Contact!");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
 mongoose
   .connect(
     "mongodb+srv://admin:5862@cluster0.kkzicei.mongodb.net/node-api?retryWrites=true&w=majority"
   )
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((error) => console.log(error.message));
+  .then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
+  })
+  .catch((error) => {
+    console.log(error.message);
+  });
