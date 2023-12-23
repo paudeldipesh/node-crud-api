@@ -41,6 +41,21 @@ app.post("/products", async (req, res) => {
   }
 });
 
+app.put("/products/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findByIdAndUpdate(id, req.body);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: `Cannot find any product with ID ${id}` });
+    }
+    return res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 mongoose
   .connect(
     "mongodb+srv://admin:5862@cluster0.kkzicei.mongodb.net/node-api?retryWrites=true&w=majority"
