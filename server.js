@@ -6,6 +6,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -50,6 +51,21 @@ app.put("/products/:id", async (req, res) => {
         .status(404)
         .json({ message: `Cannot find any product with ID ${id}` });
     }
+    const updatedProduct = await Product.findById(id);
+    return res.status(200).json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.delete("/products/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
+    if (!product)
+      return res
+        .status(404)
+        .json({ message: `Cannot find any product with ID ${id}` });
     return res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
